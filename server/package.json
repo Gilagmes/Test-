@@ -1,12 +1,13 @@
 {
-  "name": "tiles-survival-server",
+  "name": "tiles-survival",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "Tiles Survival Telegram Web App",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server/server.js",
+    "install-server": "cd server && npm install"
   },
-  "dependencies": {
-    "ws": "^8.14.2",
-    "express": "^4.18.2"
+  "engines": {
+    "node": "18.x"
   }
 }
