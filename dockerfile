@@ -2,17 +2,16 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Сначала копируем package.json из server/
-COPY server/package*.json ./
-RUN npm install
+# Копируем и устанавливаем зависимости сервера
+COPY server/package*.json ./server/
+RUN cd server && npm install
 
-# Потом копируем весь сервер и клиент
+# Копируем весь код
 COPY server/ ./server/
 COPY client/ ./client/
 
-# Указываем рабочую директорию сервера
-WORKDIR /app/server
-
+# Открываем порт
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+# Запускаем сервер
+CMD ["node", "server/server.js"]
