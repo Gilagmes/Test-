@@ -2,14 +2,15 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Копируем сервер
-COPY server/package*.json ./server/
-RUN cd server && npm install
+# Сначала копируем package.json из server/
+COPY server/package*.json ./
+RUN npm install
 
-# Копируем клиент и сервер
+# Потом копируем весь сервер и клиент
 COPY server/ ./server/
 COPY client/ ./client/
 
+# Указываем рабочую директорию сервера
 WORKDIR /app/server
 
 EXPOSE 3000
