@@ -1,0 +1,16 @@
+{
+  "name": "tiles-survival",
+  "version": "1.0.0",
+  "description": "Tiles Survival Telegram Web App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2"
+  }
+}
