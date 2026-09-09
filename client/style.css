@@ -1,0 +1,465 @@
+/* ============================================
+   TILES SURVIVAL - Telegram Web App Styles
+   ============================================ */
+
+/* CSS Variables */
+:root {
+    --bg-primary: #0f0f1a;
+    --bg-secondary: #1a1a2e;
+    --bg-panel: rgba(26, 26, 46, 0.95);
+    --accent-primary: #e94560;
+    --accent-secondary: #0f3460;
+    --accent-success: #00d9ff;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --danger: #ff4757;
+    --warning: #ffa502;
+    
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 20px rgba(233, 69, 96, 0.4);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+}
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 3px;
+}
+
+/* ============================================
+   LOADING SCREEN
+   ============================================ */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(233, 69, 96, 0.3);
+    border-top-color: var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 20px rgba(233, 69, 96, 0.3);
+}
+
+.loader-text {
+    margin-top: 20px;
+    color: var(--accent-primary);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ============================================
+   GAME CANVAS
+   ============================================ */
+#gameCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #16213e 0%, #0f0f1a 100%);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 1;
+}
+
+/* Grid overlay effect */
+.canvas-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ============================================
+   UI LAYER - TOP BAR
+   ============================================ */
+.ui-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, rgba(15,15,26,0.95) 0%, rgba(15,15,26,0.8) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(233, 69, 96, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    box-shadow: var(--shadow-soft);
+}
+
+/* Resources Panel */
+.resources {
+    display: flex;
+    gap: 12px;
+}
+
+.resource-item {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 14px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.resource-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+}
+
+.resource-icon {
+    font-size: 18px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.resource-value {
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.resource-item.energy {
+    border-color: rgba(0, 217, 255, 0.3);
+    background: rgba(0, 217, 255, 0.1);
+}
+
+.resource-item.energy .resource-value {
+    color: var(--accent-success);
+}
+
+/* Clan Button */
+.btn-clan {
+    background: linear-gradient(135deg, var(--accent-secondary) 0%, #1a4a7a 100%);
+    border: 1px solid rgba(233, 69, 96, 0.3);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-clan:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+    border-color: var(--accent-primary);
+}
+
+.btn-clan:active {
+    transform: translateY(0);
+}
+
+.btn-clan .badge {
+    background: var(--accent-primary);
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* ============================================
+   CLAN PANEL (Voice Chat)
+   ============================================ */
+.clan-panel {
+    position: fixed;
+    top: 70px;
+    right: 16px;
+    width: 280px;
+    max-height: 60vh;
+    background: var(--bg-panel);
+    border: 1px solid rgba(233, 69, 96, 0.3);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: none;
+    flex-direction: column;
+    z-index: 101;
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-glow);
+    animation: slideIn 0.3s ease;
+}
+
+.clan-panel.visible {
+    display: flex;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.clan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.clan-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clan-status {
+    font-size: 11px;
+    color: var(--accent-success);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.clan-members {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.member {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-md);
+    transition: all 0.3s ease;
+}
+
+.member:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    position: relative;
+}
+
+.member-avatar.speaking {
+    box-shadow: 0 0 0 2px var(--accent-success);
+    animation: speaking 1s ease-in-out infinite;
+}
+
+@keyframes speaking {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.voice-indicator {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 14px;
+    height: 14px;
+    background: var(--accent-success);
+    border-radius: 50%;
+    border: 2px solid var(--bg-panel);
+    display: none;
+}
+
+.voice-indicator.active {
+    display: block;
+    animation: voicePulse 1s infinite;
+}
+
+@keyframes voicePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+.member-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.member-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.member-role {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.voice-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.voice-btn:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.voice-btn.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+    animation: recording 2s infinite;
+}
+
+@keyframes recording {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(233, 69, 96, 0); }
+}
+
+/* ============================================
+   CONTROLS - BOTTOM NAVIGATION
+   ============================================ */
+.controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    padding: 20px;
+    background: rgba(15, 15, 26, 0.8);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.controls-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, #c73e54 100%);
+    border: none;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    box-shadow: 0 
