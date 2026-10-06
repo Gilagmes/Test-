@@ -1,0 +1,23 @@
+{
+  "name": "the-last-port-3d",
+  "version": "9.70.0",
+  "description": "The Last Port 3D — The Walking Dead: Survivors Replica with 3D WebGL Base, Tower Defense, Barracks, Hero Bonds & Radio Radar",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "node tests/test_interactive_tower_defense.js && node tests/test_army_barracks_system.js && node tests/test_hero_bonds_archetypes.js && node tests/test_3d_obstacle_clearing.js && node tests/test_interactive_radio_scanner.js",
+    "test:all": "python3 -c \"import subprocess, os; test_files = [f for f in os.listdir('tests') if f.startswith('test_') and f.endswith('.js')]; [print(('✓ ' if subprocess.run(['node', os.path.join('tests', tf)], capture_output=True).returncode == 0 else '✗ ') + tf) for tf in sorted(test_files)]\""
+  },
+  "keywords": [
+    "game",
+    "strategy",
+    "threejs",
+    "webgl",
+    "twd",
+    "the-walking-dead",
+    "tower-defense",
+    "survival"
+  ],
+  "author": "The Last Port 3D Contributors",
+  "license": "MIT"
+}
