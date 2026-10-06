@@ -88,3 +88,5 @@ assert.ok(global.G.S.power > prevPower, 'Colony power must increase');
 console.log('✓ Test 3: Obstacle Clearing, Energy deduction & Loot dispatch passed');
 
 console.log('ALL TWD 3D Obstacle & Fog Clearing tests PASS 100%!');
+
+process.exit(0);

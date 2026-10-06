@@ -69,3 +69,5 @@ assert.ok(bondsHtml.includes('АКТИВНО'), 'Active bond indicator must be r
 console.log('✓ Test 4: Bonds UI Rendering passed');
 
 console.log('ALL TWD Hero Bonds & Archetypes tests PASS 100%!');
+
+process.exit(0);

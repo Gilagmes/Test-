@@ -12,6 +12,14 @@ global.cancelAnimationFrame = (id) => clearTimeout(id);
 global.document = {
   readyState: 'complete',
   addEventListener: () => {},
+  body: {
+    classList: {
+      add: () => {},
+      remove: () => {},
+      toggle: () => {},
+      contains: () => false
+    }
+  },
   getElementById: (id) => {
     return {
       id,
@@ -84,3 +92,5 @@ assert.strictEqual(global.G.S.energy, prevEnergy - 10, '10 Energy must be deduct
 console.log('✓ Test 3: Rescue Dispatch & Rewards Credited passed');
 
 console.log('ALL TWD Interactive Radio Scanner tests PASS 100%!');
+
+process.exit(0);

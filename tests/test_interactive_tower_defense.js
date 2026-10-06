@@ -136,3 +136,5 @@ assert.ok(global.G.S.res.wood > 500, 'Wood reward must be credited');
 console.log('✓ Test 6: Victory Resolution and Resource Spoils passed');
 
 console.log('ALL TWD Interactive Tower Defense tests PASS 100%!');
+
+process.exit(0);

@@ -91,3 +91,5 @@ assert.strictEqual(global.G.S.res.food, prevFood - totalWounded * 5, 'Food cost 
 console.log('✓ Test 4: Hospital Treatment and Wounded Recovery passed');
 
 console.log('ALL TWD Army, Barracks & Hospital tests PASS 100%!');
+
+process.exit(0);
