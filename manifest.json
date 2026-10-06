@@ -1,0 +1,23 @@
+{
+  "name": "The Last Port: Survivors 3D",
+  "short_name": "The Last Port",
+  "description": "High Quality 3D Post-Apocalyptic Strategy & Citadel Defense (TWD: Survivors Replica)",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070807",
+  "theme_color": "#0f1710",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "games",
+    "strategy",
+    "action"
+  ]
+}
