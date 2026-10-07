@@ -15899,7 +15899,7 @@ if (typeof G !== 'undefined') {
       }
       this.scheduleAirdrop(180000);
     },
-    spawnStrayWalkers() {
+    spawnStrayWalkers() { return; /* disabled for clean 3D scene */
       if (typeof document === "undefined" || !document.querySelectorAll || !document.body) return;
       document.querySelectorAll('.twd-stray-walker').forEach(w => { if (w && typeof w.remove === 'function') w.remove(); else if (w && w.parentNode) w.parentNode.removeChild(w); });
       const positions = [

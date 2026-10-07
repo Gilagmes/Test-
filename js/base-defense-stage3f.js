@@ -1,0 +1,25 @@
+/* LAST PORT — STAGE 3F: HERO PROGRESSION */
+(function(){
+  'use strict';
+  if(typeof window==='undefined'||!window.G)return;
+  const G=window.G;
+  const RARITY={common:{name:'Обычный',mult:1,color:'#94a3b8'},rare:{name:'Редкий',mult:1.08,color:'#60a5fa'},epic:{name:'Эпический',mult:1.18,color:'#c084fc'},legendary:{name:'Легендарный',mult:1.32,color:'#f59e0b'}};
+  const TREE={damage:{name:'Ударная сила',icon:'⚔️',max:5,desc:'+6% урона за уровень'},survival:{name:'Выносливость',icon:'❤️',max:5,desc:'+8% здоровья за уровень'},tactics:{name:'Тактика',icon:'🎯',max:5,desc:'+4% точности и дальности за уровень'}};
+  const GEAR={weapon:{name:'Оружие',icon:'🔫',atk:12,hp:0,acc:2,cost:25},armor:{name:'Броня',icon:'🛡️',atk:0,hp:90,acc:0,cost:30},module:{name:'Модуль',icon:'⚙️',atk:5,hp:30,acc:4,cost:35}};
+  function heroes(){return G.S?.heroes||G.S?.survivors||[]} function hero(id){return heroes().find(h=>String(h.id)===String(id));}
+  function xpNeed(level){return 100+(Math.max(1,level)-1)*60;}
+  function ensure(h){h.progress=h.progress||{};const p=h.progress;p.xp=Number(p.xp||0);p.level=Number(p.level||h.lv||h.level||1);p.skillPoints=Number(p.skillPoints||0);p.tree=p.tree||{};Object.keys(TREE).forEach(k=>p.tree[k]=Math.max(0,Math.min(TREE[k].max,Number(p.tree[k]||0))));p.rarity=RARITY[p.rarity]?p.rarity:(p.rarity||'common');p.gear=p.gear||{};p.gearStats=p.gearStats||{attack:0,hp:0,accuracy:0};return p;}
+  function grantXP(id,amount){const h=hero(id);if(!h||amount<=0)return false;const p=ensure(h);p.xp+=Number(amount);let ups=0;while(p.xp>=xpNeed(p.level)){p.xp-=xpNeed(p.level);p.level++;p.skillPoints++;ups++;}h.lv=p.level;h.level=p.level;h.xp=p.xp;if(ups) G.toast?.(`⭐ ${h.n||h.name||h.id} достиг уровня ${p.level}! +${ups} очко навыка.`);G.save?.();return true;}
+  function addBattleXP(kills=0,damage=0){const placed=G.getHeroCombatProfiles?G.getHeroCombatProfiles():[];const ids=placed.map(p=>p.id);ids.forEach(id=>grantXP(id,Number(kills)*20+Math.floor(Number(damage)/250)));return ids.length;}
+  function upgrade(id,key){const h=hero(id);if(!h||!TREE[key])return false;const p=ensure(h);if(p.skillPoints<=0||p.tree[key]>=TREE[key].max)return false;p.skillPoints--;p.tree[key]++;G.save?.();return true;}
+  function setRarity(id,key){const h=hero(id);if(!h||!RARITY[key])return false;const p=ensure(h);p.rarity=key;G.save?.();return true;}
+  function equip(id,slot){const h=hero(id);if(!h||!GEAR[slot])return false;const p=ensure(h);const g=GEAR[slot];if(!G.S.res)G.S.res={};if(Number(G.S.res.metal||0)<g.cost)return false;G.S.res.metal-=g.cost;p.gear[slot]={level:1};recalc(h);G.save?.();return true;}
+  function enhance(id,slot){const h=hero(id);if(!h||!GEAR[slot])return false;const p=ensure(h),item=p.gear[slot];if(!item)return false;const cost=GEAR[slot].cost*(item.level+1);if(Number(G.S.res?.metal||0)<cost)return false;G.S.res.metal-=cost;item.level++;recalc(h);G.save?.();return true;}
+  function recalc(h){const p=ensure(h),r=RARITY[p.rarity],lv=p.level-1;const stats={attack:0,hp:0,accuracy:0};Object.entries(p.gear).forEach(([slot,it])=>{const g=GEAR[slot];if(!g)return;stats.attack+=(g.atk||0)*it.level;stats.hp+=(g.hp||0)*it.level;stats.accuracy+=(g.acc||0)*it.level});stats.attack=Math.round((stats.attack+lv*3)*(1+p.tree.damage*.06)*r.mult);stats.hp=Math.round((stats.hp+lv*25)*(1+p.tree.survival*.08)*r.mult);stats.accuracy=Math.round((stats.accuracy+lv*1+p.tree.tactics*4)*r.mult);p.gearStats=stats;return stats;}
+  function profile(id){const h=hero(id);if(!h)return null;const p=ensure(h);recalc(h);return {id:String(h.id),name:h.n||h.name||h.id,level:p.level,xp:p.xp,xpNeed:xpNeed(p.level),skillPoints:p.skillPoints,rarity:p.rarity,rarityName:RARITY[p.rarity].name,tree:{...p.tree},gear:{...p.gear},stats:{...p.gearStats}};}
+  function render(){const el=document.getElementById('stage3HeroProgressionPanel');if(!el)return;const hs=heroes();el.innerHTML='<div style="padding:8px;background:#0f1720;border:1px solid #334155;border-radius:9px;margin-top:6px"><b>⭐ ПРОГРЕССИЯ ГЕРОЕВ</b>'+hs.map(h=>{const p=profile(h.id);return `<div style="margin-top:7px;padding:6px;background:#111923;border-radius:7px"><b>${p.name}</b> · ${RARITY[p.rarity].name} · Ур.${p.level} <span>XP ${p.xp}/${p.xpNeed}</span><br><small>⚔️ ${p.stats.attack} · ❤️ ${p.stats.hp} · 🎯 ${p.stats.accuracy} · очков навыков: ${p.skillPoints}</small><br><small>${Object.keys(TREE).map(k=>`${TREE[k].icon} ${TREE[k].name}: ${p.tree[k]}/${TREE[k].max}`).join(' · ')}</small></div>`}).join('')+'</div>';}
+  G.heroProgression={RARITY,TREE,GEAR,xpNeed,ensure,grantXP,addBattleXP,upgrade,setRarity,equip,enhance,recalc,profile,render};
+  G.heroGrantXP=grantXP;G.heroUpgradeSkill=upgrade;G.heroSetRarity=setRarity;G.heroEquipProgressionGear=equip;G.heroEnhanceProgressionGear=enhance;G.getHeroProgression=profile;G.renderHeroProgression=render;
+  if(G.renderHeroCombat&&!G.__stage3FRenderWrapped){const old=G.renderHeroCombat;G.renderHeroCombat=function(){const r=old.apply(this,arguments);render();return r};G.__stage3FRenderWrapped=true;}
+  console.log('[TLP] Stage 3F hero progression loaded.');
+})();

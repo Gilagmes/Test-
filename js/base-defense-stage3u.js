@@ -1,0 +1,21 @@
+/* LAST PORT — STAGE 3U: TACTICAL COMBAT AI */
+(function(){
+ 'use strict';
+ if(typeof window==='undefined'||!window.G)return;
+ const G=window.G;
+ const BEHAVIOR={assault:{name:'Штурм',range:.45,priority:['runner','screamer','walker','brute','armored'],retreat:.12},defense:{name:'Оборона',range:.42,priority:['brute','armored','walker','screamer','runner'],retreat:.28},expedition:{name:'Разведка',range:.58,priority:['screamer','runner','walker','brute','armored'],retreat:.18},medical:{name:'Медик',range:.5,priority:['screamer','runner','walker','brute','armored'],retreat:.2},engineering:{name:'Инженер',range:.5,priority:['screamer','armored','brute','walker','runner'],retreat:.22}};
+ function S(){return G.S||(G.S={})} function D(){return G.baseDefenseState?.()} function heroes(){return S().heroes||S().survivors||[]} function hero(id){return heroes().find(h=>String(h.id)===String(id))}
+ function state(){const s=S();s.tacticalAI=s.tacticalAI||{profiles:{},history:[],enabled:true};return s.tacticalAI}
+ function profile(id){const h=hero(id);if(!h)return null;const l=G.heroLoadouts?.profile(id);const key=l?.preset||({Штурмовик:'assault',Страж:'defense',Разведчик:'expedition',Медик:'medical',Инженер:'engineering'}[h.role]||'assault');const p=state().profiles[id]||{};return {id:String(id),behavior:p.behavior||key,aggression:Number.isFinite(p.aggression)?p.aggression:.65,range:BEHAVIOR[p.behavior||key]?.range||.45,targeting:p.targeting||'priority',retreatHp:Number.isFinite(p.retreatHp)?p.retreatHp:.2,ability:p.ability!==false}}
+ function setProfile(id,patch){if(!hero(id)||!patch)return false;const p=state().profiles[id]||{};state().profiles[id]={...p,...patch};state().history.unshift({type:'profile',hero:String(id),patch:{...patch},day:S().day||1});G.save?.();return true}
+ function live(a){return (a?.zombies||[]).filter(z=>z.hp>0)}
+ function score(z,p){const order=BEHAVIOR[p.behavior]?.priority||BEHAVIOR.assault.priority;const pri=Math.max(0,order.length-order.indexOf(z.type));const threat=(z.x||0)*4;const hp=1-(z.hp/Math.max(1,z.maxHp||z.hp));return pri*10+threat+hp*2}
+ function chooseTarget(a,id){const p=profile(id),ls=live(a);if(!p||!ls.length)return null; if(a.manualTarget){const m=ls.find(z=>String(z.id)===String(a.manualTarget));if(m)return m} if(p.targeting==='nearest')return ls.reduce((b,z)=>(!b||(z.x||0)<(b.x||0)?z:b),null); if(p.targeting==='weakest')return ls.reduce((b,z)=>(!b||z.hp<b.hp?z:b),null);return ls.reduce((b,z)=>(!b||score(z,p)>score(b,p)?z:b),null)}
+ function movement(id,a,target){const h=hero(id),p=profile(id);if(!h||!p||!target)return null;const hp=Number(h.hp??h.health??100)/Math.max(1,Number(h.maxHp??100));if(hp<p.retreatHp)return 'retreat';if((target.x||0)>p.range)return 'advance';return 'hold'}
+ function act(id,a){const p=profile(id),t=chooseTarget(a,id);if(!p||!t)return {id:String(id),action:'idle'};const action=movement(id,a,t);return {id:String(id),action,target:String(t.id),behavior:p.behavior};}
+ function tick(){const a=D()?.active;if(!a||a.status!=='active'||state().enabled===false)return [];const out=[];for(const h of heroes()){const r=act(h.id,a);out.push(r);const prev=state().profiles[h.id]?.lastTarget;if(r.target&&r.target!==prev)state().history.unshift({type:'retarget',hero:String(h.id),target:r.target,behavior:r.behavior,day:S().day||1});state().profiles[h.id]={...(state().profiles[h.id]||{}),lastTarget:r.target||null,lastAction:r.action};}state().history=state().history.slice(0,100);return out}
+ function enable(v=true){state().enabled=!!v;G.save?.();return state().enabled}
+ function render(){if(typeof document==='undefined')return;const el=document.getElementById('stage3TacticalAIPanel');if(!el)return;el.innerHTML='<div style="padding:8px;background:#111923;border:1px solid #334155;border-radius:8px"><b>🧠 ТАКТИЧЕСКИЙ ИИ</b><div style="margin-top:5px">'+heroes().map(h=>{const p=profile(h.id);return '<div style="margin:4px 0">'+(h.n||h.name||h.id)+' · '+(BEHAVIOR[p.behavior]?.name||p.behavior)+' · '+p.targeting+'</div>'}).join('')+'</div>'}
+ G.tacticalAI={BEHAVIOR,state,profile,setProfile,chooseTarget,movement,act,tick,enable,render};G.chooseTacticalTarget=chooseTarget;G.tickTacticalAI=tick;
+ console.log('[TLP] Stage 3U tactical combat AI loaded.');
+})();
