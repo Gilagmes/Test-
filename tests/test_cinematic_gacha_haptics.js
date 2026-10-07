@@ -8,15 +8,19 @@ global.window.innerHeight = 768;
 global.Image = class {};
 
 // Mock Navigator with Vibration API
-global.navigator = {
-  vibrateCalled: false,
-  lastPattern: null,
-  vibrate: function(pattern) {
-    this.vibrateCalled = true;
-    this.lastPattern = pattern;
-    return true;
+Object.defineProperty(global, 'navigator', {
+  configurable: true,
+  writable: true,
+  value: {
+    vibrateCalled: false,
+    lastPattern: null,
+    vibrate: function(pattern) {
+      this.vibrateCalled = true;
+      this.lastPattern = pattern;
+      return true;
+    }
   }
-};
+});
 
 const dummyElem = {
   style: {},

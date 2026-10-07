@@ -1,0 +1,10 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const G={S:{day:10,heroes:[{id:'hero-lena',name:'Лена',role:'Медик',loyalty:70,living:{loyalty:70,mood:70}},{id:'hero-viktor',name:'Виктор',role:'Страж',loyalty:70,living:{loyalty:70,mood:70}}]}};
+const ctx={window:{G},console,Date,setInterval,clearInterval};vm.createContext(ctx);vm.runInContext(fs.readFileSync('js/base-defense-stage3i.js','utf8'),ctx);const R=ctx.window.G.heroRelationships;
+assert(R.PERSONALITY['hero-lena']);assert(R.ensurePair('hero-lena','hero-viktor'));
+const before=G.S.heroes[0].living.loyalty;assert(R.interact('hero-lena','hero-viktor','praise'));assert(G.S.heroes[0].living.loyalty>before);
+assert(R.conflict('hero-lena','hero-viktor'));assert(R.status('hero-lena').risk==='stable');
+assert(R.reconcile('hero-lena','hero-viktor'));assert(R.state().events.some(x=>x.type==='conflict'));
+assert(R.jealousy('hero-lena','hero-viktor','hero-lena'));assert(R.state().events.some(x=>x.type==='jealousy'));
+G.S.heroes[0].living.loyalty=20;assert(R.status('hero-lena').risk==='leave_risk');
+console.log('Stage 3I: 6/6 passed');

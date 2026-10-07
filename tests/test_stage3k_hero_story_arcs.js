@@ -1,0 +1,18 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const G={S:{day:20,res:{food:100,water:100,wood:100,metal:100,fuel:20},commune:{morale:50},heroes:[{id:'hero-lena',heroCatalogId:'hero-lena',name:'Лена',loyalty:70,living:{loyalty:70,mood:70}}]}};
+const ctx={window:{G},console,Date};vm.createContext(ctx);vm.runInContext(fs.readFileSync('js/base-defense-stage3k.js','utf8'),ctx);const A=ctx.window.G.heroStoryArcs;
+assert(A.get('hero-lena').arc.chapters.length===3);
+assert(A.start('hero-lena'));
+assert(A.state().active['hero-lena'].chapter===0);
+assert(A.choose('hero-lena','help'));
+assert(G.S.res.food===90);
+assert(!A.choose('hero-lena','medicine'));
+G.S.day=21;
+assert(A.choose('hero-lena','medicine'));
+assert(G.S.res.water===90);
+G.S.day=22;
+assert(A.choose('hero-lena','oath'));
+assert(A.state().completed['hero-lena']);
+assert(A.state().consequences['hero-lena'].ending==='oath');
+assert(G.S.heroes[0].living.loyalty>70);
+console.log('Stage 3K: 8/8 passed');

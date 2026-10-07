@@ -1,0 +1,12 @@
+const assert=require('assert'),fs=require('fs'),vm=require('vm');
+const ctx={console,setTimeout,clearTimeout,Date,Math};ctx.window=ctx;ctx.G={S:{day:10,food:20,heroes:[{id:'hero-lena',name:'Лена',loyalty:70,living:{loyalty:70,mood:70}},{id:'hero-viktor',name:'Виктор',loyalty:70,living:{loyalty:70,mood:70}}],commune:{morale:50}},save(){}};
+vm.createContext(ctx);vm.runInContext(fs.readFileSync('js/base-defense-stage3n.js','utf8'),ctx);const B=ctx.G.heroBonds;
+assert(B.form('hero-lena','hero-viktor','romantic')); assert.strictEqual(B.list().length,1);
+let p=B.get('hero-lena','hero-viktor'); assert.strictEqual(p.type,'romantic'); assert(p.trust>=38);
+assert(B.interact('hero-lena','hero-viktor','date')); p=B.get('hero-lena','hero-viktor'); assert(p.affinity>=50);
+assert(B.conflict('hero-lena','hero-viktor')); p=B.get('hero-lena','hero-viktor'); assert(p.tension>=20);
+assert(B.reconcile('hero-lena','hero-viktor')); p=B.get('hero-lena','hero-viktor'); assert(p.tension<30 && p.trust>=40);
+assert(B.celebrate('hero-lena','hero-viktor')); assert.strictEqual(ctx.G.S.food,15); assert.strictEqual(ctx.G.S.commune.morale,60);
+assert(B.breakBond('hero-lena','hero-viktor')); p=B.get('hero-lena','hero-viktor'); assert.strictEqual(p.trust,0); assert.strictEqual(B.state().stats.broken,1);
+assert(B.get('hero-lena','hero-viktor').history.length>=5);
+console.log('✓ stage3n 8/8');

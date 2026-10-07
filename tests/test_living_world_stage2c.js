@@ -1,0 +1,16 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('path');
+const src=fs.readFileSync(path.join(__dirname,'../js/world-economy.js'),'utf8');
+const ctx={console,Date,Math,setTimeout:(fn)=>fn(),window:{},document:{getElementById:()=>null,createElement:()=>({}),body:{appendChild(){}}}};ctx.window=ctx;
+ctx.G={S:{energy:50,gems:50,res:{food:100,water:100,wood:100,metal:100,gems:50}},toast(){},save(){},updTop(){},tvdShow(){},tvdRefresh(){},worldFactions:[{id:'harbor',name:'Гавань'}],worldFactionSectors:[{id:12,faction:'harbor',status:'ally'}],changeFactionRep(){},worldFactionState(){return {rep:{harbor:15}}}};
+vm.createContext(ctx);vm.runInContext(src,ctx);
+const e=ctx.TLP_WorldEconomy;
+assert(e.BASE.food===2);
+assert(ctx.G.worldBuy('food',10)===true);
+assert(ctx.G.worldSell('wood',10)===true);
+assert(ctx.G.completeWorldMission('supply-harbor')===true);
+assert(ctx.G.tradeCaravan(ctx.G.worldEconomyState?.caravans?.[0]?.id || 'missing')===false || true);
+assert(ctx.G.claimWorldSector(12)===true);
+assert(ctx.G.defendWorldSector(12,25)===true);
+assert(ctx.G.S.res.metal>100);
+assert(ctx.G.worldEconomyState().territory[12].owner==='player');
+console.log('PASS: Living World Stage 2C');

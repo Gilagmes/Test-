@@ -169,7 +169,7 @@ global.G = {
 };
 
 // Load js/twd-systems.js directly
-const twdJsPath = path.resolve('/home/user/js/twd-systems.js');
+const twdJsPath = path.resolve(__dirname, '../js/twd-systems.js');
 const twdJsCode = fs.readFileSync(twdJsPath, 'utf-8');
 
 eval(twdJsCode);

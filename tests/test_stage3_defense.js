@@ -1,0 +1,11 @@
+const assert=require('assert'),fs=require('fs'),path=require('path');
+global.window=global;global.window.addEventListener=()=>{};global.document={getElementById:()=>null};
+global.G={S:{wave:3,bld:{wall:2},res:{wood:500,metal:300,food:500},survivors:[{id:'s1',name:'Михаил',health:100,attack:30,mood:80},{id:'s2',name:'Анна',health:100,attack:24,mood:90}],heroes:[{id:'h1',n:'Дэрил',hp:100,a:40}],guardTowers:{tow_sniper:{lv:1}}},SUBS:{base:[]},SL:{},save:()=>{},updAll:()=>{},updTop:()=>{},toast:()=>{}};
+eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3.js'),'utf8'));
+assert.ok(G.baseDefenseState,'Stage 3 state API missing');
+const d=G.baseDefenseState();assert.ok(d.lines.front&&d.lines.gate&&d.lines.inner,'Defense lines missing');
+assert.ok(G.placeDefenseFighter('front','s1'),'Fighter placement failed');assert.strictEqual(d.placements.front,'s1');
+const maxFront=1400*(1+((G.S.bld.wall||1)-1)*.12);d.lines.front.hp=maxFront;assert.ok(G.repairDefenseLine('front',100)===false,'Full line should not repair initially');d.lines.front.hp-=300;assert.ok(G.repairDefenseLine('front',200),'Repair failed');
+const a=G.spawnDefenseWave(5);assert.ok(a&&a.zombies.length>=8,'Wave spawn failed');assert.ok(a.zombies.every(z=>z.hp>0),'Zombie HP invalid');
+const report=G.resolveDefenseWave();assert.ok(report&&typeof report.won==='boolean','Wave resolution failed');assert.ok(d.battles.length===1,'Battle report missing');
+console.log('✓ Stage 3 defense system: 5/5 checks passed');process.exit(0);

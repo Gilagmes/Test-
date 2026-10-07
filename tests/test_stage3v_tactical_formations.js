@@ -1,0 +1,13 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const ctx={console,Date,Math,document:{getElementById:()=>null}};
+ctx.window={G:{S:{day:5,heroes:[{id:'h1',name:'Роман',role:'Штурмовик',hp:100},{id:'h2',name:'Лена',role:'Медик',hp:100},{id:'h3',name:'Ирина',role:'Инженер',hp:100}],squadAI:{squads:{},active:{},history:[],enabled:true}},baseDefenseState:()=>({active:{status:'active',zombies:[{id:'z1',type:'runner',hp:60,maxHp:100,x:.2}]}})}};
+vm.createContext(ctx);vm.runInContext(fs.readFileSync('js/base-defense-stage3v.js','utf8'),ctx);const G=ctx.window.G;
+assert(G.squadAI.createSquad('alpha',['h1','h2','h3']));
+assert(G.squadAI.setFormation('alpha','shield'));
+assert(G.squadAI.positions('alpha').length===3);
+assert(G.squadAI.positions('alpha').some(x=>x.slot==='back'));
+assert(G.squadAI.protection('alpha','h2').cover>0);
+assert(G.squadAI.squadSynergy('alpha')>=50);
+assert(G.squadAI.tick().length===3);
+assert(G.squadAI.enable(false)===false&&G.squadAI.tick().length===0);
+console.log('Stage 3V Tactical Formations: 7/7 passed');

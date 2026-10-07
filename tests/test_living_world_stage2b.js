@@ -1,0 +1,14 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('path');
+const src=fs.readFileSync(path.join(__dirname,'../js/world-factions.js'),'utf8');
+const ctx={console,Date,Math,setTimeout:(fn)=>fn(),window:{},document:{getElementById:()=>null,createElement:()=>({}),body:{appendChild(){}}}};ctx.window=ctx;
+ctx.G={S:{energy:50,food:100,water:0,wood:0,metal:0,gems:20,res:{food:100,gems:20}},toast(){},save(){},updTop(){},tvdShow(){},tvdRefresh(){}};
+vm.createContext(ctx);vm.runInContext(src,ctx);
+assert(ctx.TLP_WorldFactions.FACTIONS.length===4);
+assert(ctx.G.worldFactionState().rep.harbor===15);
+assert(ctx.G.diplomacyFaction('harbor','gift')===true);
+assert(ctx.G.worldFactionState().rep.harbor>15);
+assert(ctx.G.tradeWithFaction('harbor')===true);
+assert(ctx.G.worldFactionState().trades===1);
+assert(ctx.G.claimFactionSector(12)===true);
+assert(ctx.G.worldFactionState().controlled.includes(12));
+console.log('PASS: Living World Stage 2B');

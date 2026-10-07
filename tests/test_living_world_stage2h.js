@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('path');
+const src=fs.readFileSync(path.join(__dirname,'../js/world-encounters-consequences.js'),'utf8');
+const hero={id:'h1',name:'Михаил',hp:100,living:{health:100,maxHealth:100,mood:70,fatigue:0,loyalty:70}};
+const ctx={console,Date,Math,setTimeout:(fn)=>fn(),setInterval:()=>0,window:{},document:{getElementById:()=>null,createElement:()=>({}),body:{appendChild(){}}}};ctx.window=ctx;
+ctx.G={S:{res:{food:500,water:300,metal:100,wood:100},heroes:[hero]},toast(){},save(){},updTop(){},tvdRefresh(){}};
+vm.createContext(ctx);vm.runInContext(src,ctx);
+assert(ctx.TLP_WorldConsequences.version==='2.8.0');
+const e=ctx.G.spawnWorldConsequence();assert(e&&e.status==='active');
+const faction=e.faction;assert(ctx.G.resolveWorldConsequence(e.id,'help','h1')===true);
+assert(ctx.G.worldConsequenceState().reputation[faction]>0);assert(hero.living.mood>=70);
+const s=ctx.G.affectWorldTerritory(e.sector,12);assert(s===12);
+console.log('PASS: Living World Stage 2H');

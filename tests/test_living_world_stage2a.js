@@ -1,0 +1,11 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('path');
+const src=fs.readFileSync(path.join(__dirname,'../js/world-map-live.js'),'utf8');
+const ctx={console,Date,Math,setTimeout:(fn)=>fn(),window:{},document:{getElementById:()=>null,createElement:()=>({}),body:{appendChild(){}}}};ctx.window=ctx;
+ctx.G={S:{energy:50,food:0,water:0,wood:0,metal:0,gems:0},toast(){},save(){},updTop(){},tvdShow(){},tvdRefresh(){},tab(){}};
+vm.createContext(ctx);vm.runInContext(src,ctx);
+assert(ctx.TLP_WorldLive && ctx.TLP_WorldLive.ENCOUNTERS.length===4);
+const e=ctx.TLP_WorldLive.ensureEncounter(); assert(e && e.id);
+assert(ctx.G.scoutWorldEncounter()===true); assert(ctx.G.S.energy===40);
+assert(ctx.G.resolveWorldEncounter('help')===true);
+assert(ctx.G.S.food+ctx.G.S.water+ctx.G.S.wood+ctx.G.S.metal+ctx.G.S.gems>0);
+console.log('PASS: Living World Stage 2A');

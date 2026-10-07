@@ -1,0 +1,13 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const code=fs.readFileSync(require('path').join(__dirname,'../js/living-commune.js'),'utf8');
+const elements={};
+const ctx={console,Date,Math,setInterval:()=>{},setTimeout:(fn)=>fn(),window:{},document:{getElementById:id=>elements[id]||null,createElement:()=>({style:{},classList:{add(){},remove(){}},appendChild(){},setAttribute(){}}),body:{appendChild(){}}}};
+ctx.window=ctx;
+ctx.G={S:{heroes:[{id:'a',n:'Анна',loyalty:80},{id:'b',n:'Илья',loyalty:60}],res:{food:100}},SUBS:{heroes:['specialists','bonds']},toast(){},save(){},updTop(){},rPanel(){}};
+vm.createContext(ctx);vm.runInContext(code,ctx);
+const r=ctx.TLP_LivingCommune.getRel('a','b'); assert(r && Number.isFinite(r.affinity));
+const before=r.value; ctx.G.livingTalk('a','b'); assert(r.value>before && r.interactions===1);
+const summary=ctx.G.getLivingRelationship('a','b'); assert(summary && summary.stage && Number.isFinite(summary.score));
+ctx.G.livingConflict('a','b'); assert(r.value<before+8,'conflict did not reduce relationship'); assert(r.jealousy>0);
+ctx.G.livingReconcile('a','b'); assert(r.value>before-5,'reconciliation failed');
+console.log('PASS: Living Commune relationships Stage 1B');

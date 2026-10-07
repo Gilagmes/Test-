@@ -1,0 +1,12 @@
+const assert=require('assert'),fs=require('fs'),path=require('path');
+global.window=global;global.window.addEventListener=()=>{};global.document={getElementById:(id)=>['stage3CommandPanel','stage3BattleHUD'].includes(id)?{innerHTML:''}:null};global.performance={now:()=>1000};global.requestAnimationFrame=()=>{};
+global.setInterval=()=>{};
+global.G={S:{wave:3,bld:{wall:1},res:{wood:500,metal:300},commandEnergy:100,survivors:[{id:'s1',name:'Михаил',health:100,attack:80,mood:100}],heroes:[],guardTowers:{}},SUBS:{base:[]},SL:{},save:()=>{},updAll:()=>{},toast:()=>{}};
+eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-realtime.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3c.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3d.js'),'utf8'));
+assert.ok(G.startRealtimeDefense(1));
+assert.ok(G.placeDefenseFighter('front','s1'));assert.equal(G.getDefenseStatus().placements.front,'s1');
+assert.ok(G.moveDefenseFighter('gate','s1'));assert.equal(G.getDefenseStatus().placements.gate,'s1');assert.ok(!G.getDefenseStatus().placements.front);
+const a=G.getRealtimeDefense();const target=a.zombies[0];assert.ok(G.selectDefenseTarget(target.id));assert.equal(a.manualTarget,target.id);G.renderDefenseBattleHUD();
+assert.ok(G.pauseDefenseBattle());assert.equal(a.status,'paused');assert.ok(G.resumeDefenseBattle());assert.equal(a.status,'active');
+assert.ok(G.removeDefenseFighter('gate'));assert.ok(!G.getDefenseStatus().placements.gate);assert.ok(typeof G.renderDefenseBattleHUD==='function');
+console.log('✓ Stage 3D battle HUD: 6/6 checks passed');

@@ -1,0 +1,16 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const code=fs.readFileSync(require('path').join(__dirname,'../js/living-commune.js'),'utf8');
+const elements={};
+const ctx={console,Date,Math,setInterval:()=>{},setTimeout:(fn)=>fn(),window:{},document:{getElementById:(id)=>elements[id]||null,createElement:()=>({style:{},classList:{add(){},remove(){}},appendChild(){}}),body:{appendChild(){} }}};
+ctx.window=ctx;
+ctx.G={S:{heroes:[{id:'a',n:'Анна',loyalty:80},{id:'b',n:'Илья',loyalty:60}],res:{food:100}},SUBS:{heroes:['specialists','bonds']},toast(){},save(){},updTop(){}};
+ctx.G.rPanel=function(){};
+vm.createContext(ctx);vm.runInContext(code,ctx);
+assert(ctx.TLP_LivingCommune,'living commune API missing');
+assert(ctx.G.S.heroes[0].living,'hero state missing');
+assert(ctx.G.S.heroes[0].living.mood>=0);
+const r=ctx.TLP_LivingCommune.getRel('a','b');assert(r && r.value===0,'relationship init failed');
+ctx.G.livingTalk('a','b');assert(ctx.TLP_LivingCommune.getRel('a','b').value>0,'relationship update failed');
+ctx.G.livingRest('a');assert(ctx.G.S.heroes[0].living.fatigue===0,'rest failed');
+assert(ctx.G.SUBS.heroes.includes('life'),'heroes life tab missing');
+console.log('PASS: Living Commune Stage 1');

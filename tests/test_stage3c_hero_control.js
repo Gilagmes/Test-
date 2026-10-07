@@ -1,0 +1,12 @@
+const assert=require('assert'),fs=require('fs'),path=require('path');
+global.window=global;global.window.addEventListener=()=>{};global.document={getElementById:(id)=>id==='stage3CommandPanel'?{innerHTML:''}:null};global.performance={now:()=>1000};global.requestAnimationFrame=()=>{};
+global.G={S:{wave:3,bld:{wall:1},res:{wood:500,metal:300},commandEnergy:100,survivors:[{id:'s1',name:'Михаил',health:100,attack:80,mood:100}],heroes:[],guardTowers:{}},SUBS:{base:[]},SL:{},save:()=>{},updAll:()=>{},toast:()=>{}};
+eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-realtime.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3c.js'),'utf8'));
+assert.ok(G.startRealtimeDefense(1));G.placeDefenseFighter('front','s1');let a=G.getRealtimeDefense();assert.ok(a);
+const target=a.zombies[0];assert.ok(G.selectDefenseTarget(target.id));assert.equal(a.manualTarget,target.id);
+assert.ok(G.useDefenseAbility('grenade'));assert.equal(G.S.commandEnergy,75);
+assert.ok(G.useDefenseAbility('rally'));assert.equal(G.S.commandEnergy,45);assert.ok(a.buffs.rally>0);const hpBefore=a.zombies.find(z=>String(z.id)===String(target.id)).hp;G.tickRealtimeDefense(.01);assert.ok(a.shots>=0);
+assert.ok(G.useDefenseAbility('stun'));assert.equal(G.S.commandEnergy,27);assert.ok(a.zombies.some(z=>z.stunned>0));
+assert.ok(G.useDefenseAbility('heal'));assert.equal(G.S.commandEnergy,7);
+G.tickRealtimeDefense(.5);assert.ok(a.cooldowns.heal>0);assert.ok(typeof G.renderDefenseCommand==='function');
+console.log('✓ Stage 3C hero control: 7/7 checks passed');

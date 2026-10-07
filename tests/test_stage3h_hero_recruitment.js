@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const G={S:{day:10,res:{food:500,metal:500,wood:500},heroes:[],trust:3},save:()=>{}}; G.G=G;
+vm.runInNewContext(fs.readFileSync('js/base-defense-stage3g.js','utf8'),{window:G,document:{getElementById:()=>null}});
+vm.runInNewContext(fs.readFileSync('js/base-defense-stage3h.js','utf8'),{window:G,document:{getElementById:()=>null}});
+const C=G.heroCollection.CATALOG[0]; assert(C&&C.id,'catalog');
+assert(G.heroRecruitmentStory.canStart(C.id).ok,'requirements');
+assert(G.heroRecruitStoryStart(C.id),'start');
+for(let i=0;i<2;i++) G.heroRecruitStoryAdvance(C.id,'help');
+assert(G.heroRecruitmentStory.get(C.id).encounter.status==='found','found');
+assert(G.heroRecruitStoryRecruit(C.id),'recruit');
+assert(G.S.heroes.some(h=>h.heroCatalogId===C.id),'hero added');
+console.log('✓ Stage 3H: 5/5');

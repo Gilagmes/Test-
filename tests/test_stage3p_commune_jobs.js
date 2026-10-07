@@ -1,0 +1,3 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const src=fs.readFileSync('js/base-defense-stage3p.js','utf8');const ctx={console,Date,Math};ctx.window={G:{S:{day:2,heroes:[{id:'a',name:'Лена',living:{fatigue:10,mood:90}},{id:'b',name:'Виктор',living:{fatigue:40,mood:70}}]},save(){}}};vm.createContext(ctx);vm.runInContext(src,ctx);const G=ctx.window.G;
+assert(G.heroJobs.setJob('a','medic'));assert(G.heroJobs.efficiency('a')>0);const w=G.heroJobs.work('a',2);assert(w.output>0);assert(G.heroJobs.setJob('b','medic'));assert(G.heroJobs.mentor('a','b'));assert(G.heroJobs.state().mentoring===1);assert(G.heroJobs.get().history.length>=3);assert(G.heroJobs.JOBS.medic.out==='water');console.log('Stage 3P Commune Jobs: 7/7 passed');

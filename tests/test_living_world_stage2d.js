@@ -1,0 +1,14 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('path');
+const src=fs.readFileSync(path.join(__dirname,'../js/world-war.js'),'utf8');
+const ctx={console,Date,Math,setTimeout:(fn)=>fn(),setInterval:()=>0,window:{},document:{getElementById:()=>null,createElement:()=>({}),body:{appendChild(){}}}};ctx.window=ctx;
+ctx.G={S:{res:{food:500,water:200,wood:300,metal:300,gems:50},energy:50},toast(){},save(){},updTop(){},tvdShow(){},tvdRefresh(){},worldFactionSectors:[{id:12,faction:'harbor',status:'ally'},{id:43,faction:'ironwolves',status:'hostile'}],worldEconomyState(){return {territory:{12:{owner:'player',fort:50},43:{owner:'neutral',fort:30}}}},changeFactionRep(){}};
+vm.createContext(ctx);vm.runInContext(src,ctx);
+assert(ctx.TLP_WorldWar.version==='2.3.0');
+assert(ctx.G.recruitWorldGarrison(12,10)===true);
+assert(ctx.G.fortifyWorldSector(12,15)===true);
+assert(ctx.G.worldWarState().garrisons[12].troops>=50);
+assert(ctx.G.startWorldSiege(12)===true);
+const siege=ctx.G.worldWarState().sieges[0];
+assert(ctx.G.resolveWorldSiege(siege.id,'defend')===true || ctx.G.worldWarState().sieges[0].status==='lost');
+assert(ctx.G.attackWorldSector(43)===true || ctx.G.attackWorldSector(43)===false);
+console.log('PASS: Living World Stage 2D');

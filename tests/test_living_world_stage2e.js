@@ -1,0 +1,13 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('path');
+const src=fs.readFileSync(path.join(__dirname,'../js/world-npc-life.js'),'utf8');
+const ctx={console,Date,Math,setTimeout:(fn)=>fn(),setInterval:()=>0,window:{},document:{getElementById:()=>null,createElement:()=>({}),body:{appendChild(){}}}};ctx.window=ctx;
+ctx.G={S:{res:{food:500,water:300,metal:100,wood:100},heroes:[]},toast(){},save(){},updTop(){},tvdRefresh(){},tvdShow(){}};
+vm.createContext(ctx);vm.runInContext(src,ctx);
+assert(ctx.TLP_WorldNPC.version==='2.5.0');
+ctx.G.tickWorldNPC();
+const d=ctx.G.worldNPCState();
+assert(d.npcs.length===1); assert(d.encounters.length===1); assert(d.caravans.length===3); assert(d.patrols.length===1);
+const npc=d.npcs[0]; assert(ctx.G.recruitWorldNPC(npc.id)===true); assert(ctx.G.S.heroes.length===1); assert(d.recruited.length===1);
+const e=d.encounters[0]; assert(ctx.G.resolveWorldNPC(e.id,'rescue')===true); assert(d.rescued===1);
+const c=d.caravans[0]; const before=c.progress; assert(ctx.G.moveWorldCaravan(c.id,'forward')===true); assert(c.progress!==before);
+console.log('PASS: Living World Stage 2E');

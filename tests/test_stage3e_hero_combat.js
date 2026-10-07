@@ -1,0 +1,10 @@
+const assert=require('assert'),fs=require('fs'),path=require('path');
+global.window=global;global.window.addEventListener=()=>{};global.document={getElementById:(id)=>['stage3CommandPanel','stage3BattleHUD','stage3HeroCombatPanel'].includes(id)?{innerHTML:''}:null};global.performance={now:()=>1000};global.requestAnimationFrame=()=>{};global.setInterval=()=>{};
+global.G={S:{wave:3,bld:{wall:1},res:{wood:500,metal:300},commandEnergy:100,survivors:[],heroes:[{id:'h1',n:'Михаил',combatClass:'assault',lv:3,attack:90},{id:'h2',n:'Анна',combatClass:'medic',lv:2,attack:60}],guardTowers:{}},SUBS:{base:[]},SL:{},save:()=>{},updAll:()=>{},toast:()=>{}};
+eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-realtime.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3c.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3d.js'),'utf8'));eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3e.js'),'utf8'));
+assert.ok(G.startRealtimeDefense(1));assert.ok(G.placeDefenseFighter('front','h1'));assert.ok(G.placeDefenseFighter('gate','h2'));
+assert.equal(G.getHeroCombatProfile(G.S.heroes[0]).class,'assault');assert.equal(G.getHeroCombatProfile(G.S.heroes[1]).class,'medic');
+assert.ok(G.selectCombatHero('h1'));assert.ok(G.useHeroCombatSkill());assert.equal(G.S.commandEnergy,75);
+let a=G.getRealtimeDefense();assert.ok(a.abilityDamage>0);assert.ok(G.selectCombatHero('h2'));assert.ok(G.useHeroCombatSkill());assert.equal(G.S.commandEnergy,53);
+assert.ok(G.useHeroCombatCombo());assert.equal(G.S.commandEnergy,18);assert.ok(G.getHeroCombatState().comboCount===1);G.tickRealtimeDefense(1);assert.ok(G.getHeroCombatState().cooldowns.h1>0);assert.ok(typeof G.renderHeroCombat==='function');
+console.log('✓ Stage 3E hero combat: 8/8 checks passed');

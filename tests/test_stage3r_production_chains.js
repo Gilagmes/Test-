@@ -1,0 +1,2 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const r=fs.readFileSync('js/base-defense-stage3r.js','utf8');const ctx={console,Date,Math};ctx.window={G:{S:{day:2,res:{wood:20,metal:20,parts:10,food:10,water:10},buildings:[]},save(){}}};vm.createContext(ctx);vm.runInContext(r,ctx);const G=ctx.window.G;assert(G.productionChains.start('weapon',1));assert(G.S.res.metal===16);assert(G.productionChains.get().queue.length===1);assert(G.productionChains.tick(4)===1);assert(G.S.res.weapon===1);console.log('Stage 3R Resource Production: 4/4 passed');

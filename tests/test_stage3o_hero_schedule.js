@@ -1,0 +1,11 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const src=fs.readFileSync('js/base-defense-stage3o.js','utf8');
+const ctx={console,Date,Math};ctx.window={G:{S:{day:2,heroes:[{id:'a',name:'Лена',living:{fatigue:30,mood:70}},{id:'b',name:'Виктор',living:{fatigue:40,mood:65}}]},save(){}}};vm.createContext(ctx);vm.runInContext(src,ctx);const G=ctx.window.G;
+assert.equal(G.heroSchedule.setTime(7).block,'Рассвет');
+assert(G.heroSchedule.assign('a','медицинская смена'));
+G.heroSchedule.setTime(12);assert.equal(G.heroSchedule.getTime().block,'День');
+const before=G.S.heroes[0].living.fatigue;G.heroSchedule.tick();assert(G.S.heroes[0].living.fatigue>=before);
+assert(G.heroSchedule.meet('a','b'));assert(G.S.heroes[0].living.mood>70);
+G.heroSchedule.setTime(23);G.heroSchedule.state().lastTick=-1;const f=G.S.heroes[0].living.fatigue;G.heroSchedule.tick();assert(G.S.heroes[0].living.fatigue<f);
+assert(G.heroSchedule.get().history.length>=4);
+console.log('Stage 3O Hero Schedule: 6/6 passed');

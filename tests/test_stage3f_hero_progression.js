@@ -1,0 +1,10 @@
+const assert=require('assert'),fs=require('fs'),path=require('path');
+global.window=global;global.document={getElementById:()=>({innerHTML:''})};global.G={S:{res:{metal:1000},heroes:[{id:'h1',n:'Михаил',lv:1}]},save:()=>{},toast:()=>{}};
+eval(fs.readFileSync(path.join(__dirname,'../js/base-defense-stage3f.js'),'utf8'));
+assert.equal(G.heroProgression.xpNeed(1),100);assert.ok(G.heroGrantXP('h1',100));let p=G.getHeroProgression('h1');assert.equal(p.level,2);assert.equal(p.skillPoints,1);
+assert.ok(G.heroUpgradeSkill('h1','damage'));p=G.getHeroProgression('h1');assert.equal(p.tree.damage,1);assert.equal(p.skillPoints,0);
+assert.ok(G.heroSetRarity('h1','epic'));p=G.getHeroProgression('h1');assert.equal(p.rarity,'epic');
+assert.ok(G.heroEquipProgressionGear('h1','weapon'));p=G.getHeroProgression('h1');assert.equal(p.gear.weapon.level,1);assert.ok(p.stats.attack>0);
+assert.ok(G.heroEnhanceProgressionGear('h1','weapon'));p=G.getHeroProgression('h1');assert.equal(p.gear.weapon.level,2);
+assert.ok(G.heroGrantXP('h1',1000));p=G.getHeroProgression('h1');assert.ok(p.level>2);assert.ok(typeof G.renderHeroProgression==='function');
+console.log('✓ Stage 3F hero progression: 7/7 checks passed');
