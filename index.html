@@ -28,10 +28,8 @@
 <div class="hud-id">
 <div class="pa"><img alt="Командир" data-ri="cmdr" src="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwBSJaQAA3AA/valAAA=" style="width:100%;height:100%;object-fit:cover;border-radius:6px"/><span class="pa-lv" id="plvBadge">1</span></div>
 <div class="hud-namecol">
-<span class="pn" id="pn2">Выживший</span><span id="ptitle" style="display:none;font-size:9px;font-weight:700;color:#fbbf24;letter-spacing:.3px"></span>
-<span class="hud-pow">⚔ <span id="ppw">0</span></span>
-<span class="hud-vip">👑 VIP <span id="pvip">1</span></span>
-<span class="hud-might">⚜ <span id="pmight">0</span></span>
+<div style="display:flex;align-items:center;gap:4px"><span class="pn" id="pn2">Выживший</span><span id="ptitle" style="display:none;font-size:8.5px;font-weight:700;color:#fbbf24;letter-spacing:.3px"></span></div>
+<div style="display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:800"><span class="hud-pow">⚔ <span id="ppw">0</span></span><span class="hud-vip">👑 VIP <span id="pvip">1</span></span><span class="hud-might" style="display:none">⚜ <span id="pmight">0</span></span></div>
 </div>
 </div>
 <div class="hud-res">
@@ -270,7 +268,14 @@
     </button>
 </div>
 </div>
-<script src="js/engine3d.js"></script><script src="js/game.js"></script><script src="js/twd-systems.js"></script>
+<script src="js/engine3d.js"></script><script src="js/game.js"></script><script src="js/twd-systems.js"></script><script src="js/world-map-live.js"></script><script src="js/world-factions.js"></script><script src="js/world-economy.js"></script><script src="js/world-war.js"></script><script src="js/living-commune.js"></script><script src="js/living-drama.js"></script><script src="js/world-npc-life.js"></script><script src="js/world-encounters-consequences.js"></script><script src="js/world-expeditions.js"></script><script src="js/world-settlements.js"></script><script src="js/base-defense-stage3.js"></script><script src="js/base-defense-realtime.js"></script>
+<script src="js/base-defense-stage3c.js"></script><script src="js/base-defense-stage3d.js"></script><script src="js/base-defense-stage3e.js"></script>
+<script src="js/base-defense-stage3f.js"></script><div id="stage3HeroCollectionPanel"></div><div id="stage3HeroRelationshipPanel"></div><div id="stage3HeroQuestPanel"></div><div id="stage3HeroStoryArcPanel"></div><div id="stage3HeroConsequencePanel"></div><div id="stage3HeroEventsPanel"></div><div id="stage3HeroBondsPanel"></div><div id="stage3HeroRecruitmentPanel"></div><script src="js/base-defense-stage3g.js"></script>
+<script src="js/base-defense-stage3h.js"></script><script src="js/base-defense-stage3i.js"></script><script src="js/base-defense-stage3j.js"></script><script src="js/base-defense-stage3k.js"></script><script src="js/base-defense-stage3l.js"></script><script src="js/base-defense-stage3m.js"></script><script src="js/base-defense-stage3n.js"></script>
+<script src="js/base-defense-stage3o.js"></script>
+<script src="js/base-defense-stage3p.js"></script>
+<script src="js/base-defense-stage3q.js"></script>
+<script src="js/base-defense-stage3r.js"></script><script src="js/base-defense-stage3s.js"></script><script src="js/base-defense-stage3t.js"></script><script src="js/base-defense-stage3u.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -301,5 +306,6 @@
       }
     };
   </script>
-</body>
+<div id="stage3CommandPanel"></div><div id="stage3BattleHUD"></div>
+<div id="stage3HeroCombatPanel"></div><div id="stage3SchedulePanel"></div><div id="stage3JobsPanel"></div><div id="stage3EconomyPanel"></div><div id="stage3ProductionPanel"></div><div id="stage3EquipmentPanel"></div><div id="stage3LoadoutPanel"></div><div id="stage3SquadPanel"></div><div id="stage3AdvancedTacticsPanel"></div><script src="js/base-defense-stage3v.js"></script><script src="js/base-defense-stage3w.js"></script></body>
 </html>

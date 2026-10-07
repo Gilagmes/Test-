@@ -122,3 +122,11 @@ for tf in sorted(test_files):
 
 ## 📜 Лицензия
 Проект распространяется под открытой лицензией [MIT](LICENSE).
+
+
+## Stage 2A
+The Map tab now opens the interactive 88-sector world map with fog of war, routes, points of interest, daily encounters, scouting and expedition rewards.
+
+
+### Stage 3 — Оборона коммуны
+Three defense lines, survivor assignments, zombie archetypes, waves, wall damage, repairs and battle reports.
